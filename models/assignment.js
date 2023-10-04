@@ -34,16 +34,16 @@ const Assignment = sequelize.define(
         notEmpty: true,
       },
     },
-    assignment_created: {
-      allowNull: false,
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
-    assignment_updated: {
-      allowNull: false,
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
+    // assignment_created: {
+    //   allowNull: false,
+    //   type: DataTypes.DATE,
+    //   defaultValue: DataTypes.NOW,
+    // },
+    // assignment_updated: {
+    //   allowNull: false,
+    //   type: DataTypes.DATE,
+    //   defaultValue: DataTypes.NOW,
+    // },
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false, // This field should not be null
@@ -51,6 +51,8 @@ const Assignment = sequelize.define(
   },
   {
     modelName: "assignments", // We need to choose the model name
+    updatedAt: "assignment_updated",
+    createdAt: "assignment_created",
   }
 );
 

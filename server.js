@@ -6,9 +6,6 @@ import csvParser from "csv-parser";
 import User from "./models/user.js";
 import bcrypt from "bcrypt";
 import routes from "./routes/index.js";
-// import { db } from "./models/index.js";
-
-// const db = require("./models");
 
 const app = express();
 
@@ -32,8 +29,6 @@ fs.createReadStream("./opt/users.csv")
           // ],
         },
       });
-
-      // console.log("is existing", existingUser);
 
       if (!existingUser) {
         // Create a new user if it doesn't exist
@@ -72,36 +67,6 @@ app.use("/healthz", (req, res, next) => {
   }
   next();
 });
-
-app.get("/healthz", async (req, res) => {
-  res.setHeader("Cache-Control", "no-cache");
-  try {
-    const isDatabaseConnected = await checkDatabaseConnection();
-    console.log("is", isDatabaseConnected);
-
-    if (isDatabaseConnected) {
-      res.status(200).end(); // to ensure no payload is sent
-    } else {
-      res.status(503).end(); // HTTP 503 Service Unavailable
-    }
-  } catch (error) {
-    console.error("Error in health check:", error);
-    res.status(503).end(); // Handle any errors as service unavailable and to ensure no payload is sent
-  }
-});
-
-async function checkDatabaseConnection() {
-  return new Promise(async (resolve, reject) => {
-    try {
-      await sequelize.authenticate();
-      console.log("Connection has been established successfully.");
-      resolve(true);
-    } catch (error) {
-      console.error("Unable to connect to the database:", error);
-      reject(error);
-    }
-  });
-}
 
 // async function startServer() {
 //   try {

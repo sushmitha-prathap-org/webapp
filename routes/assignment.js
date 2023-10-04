@@ -1,6 +1,7 @@
 import express from "express";
 import basicAuth from "basic-auth";
 import bcrypt from "bcrypt";
+import sequelize from "../database.js";
 
 import * as assignmentController from "../controller/assignments.js";
 import User from "../models/user.js";
@@ -9,6 +10,9 @@ import Assignment from "../models/assignment.js";
 const router = express.Router();
 
 const checkAssignmentOwnership = async (request, response, next) => {
+  if (Object.keys(request.query).length !== 0) {
+    return res.status(400).send("Bad Request");
+  }
   const user = basicAuth(request);
   console.log("user", user);
   const result = await validateUser(user.name, user.pass);
@@ -39,11 +43,17 @@ const checkAssignmentOwnership = async (request, response, next) => {
 
 // Middleware for Basic Authentication
 const authenticate = async (request, response, next) => {
+  if (Object.keys(request.query).length !== 0) {
+    return res.status(400).send("Bad Request");
+  }
   const user = basicAuth(request);
   console.log("user", user);
+  if (!user) {
+    return response.status(401).send("Unauthorized");
+  }
   const result = await validateUser(user.name, user.pass);
   console.log("result", result);
-  if (!user || !result) {
+  if (!result) {
     return response.status(401).send("Unauthorized");
   }
   request.userId = result.id;
@@ -51,7 +61,7 @@ const authenticate = async (request, response, next) => {
   next();
 };
 
-async function validateUser(email, password) {
+const validateUser = async (email, password) => {
   const userList = await User.findAll({ where: { email: email } });
   //   console.log("userList", userList);
   for (const user of userList) {
@@ -60,21 +70,70 @@ async function validateUser(email, password) {
       return user.dataValues; // Return the user object if the password is valid
     }
   }
-
   return null;
-}
+};
+
+const checkDbMiddleware = (req, res, next) => {
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Content-Length", "0");
+
+  // if (req.method !== "GET" || req.headers["content-length"] !== "1") {
+  if (req.method !== "GET") {
+    return res.status(405).send("Method Not Allowed");
+  }
+  if (
+    Object.keys(req.query).length !== 0 ||
+    Object.keys(req.body).length !== 0
+  ) {
+    return res.status(400).send("Bad Request");
+  }
+  next();
+};
+
+const checkDatabaseConnection = async () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      await sequelize.authenticate();
+      console.log("Connection has been established successfully.");
+      resolve(true);
+    } catch (error) {
+      console.error("Unable to connect to the database:", error);
+      reject(error);
+    }
+  });
+};
 
 router
-  .route("/assignment")
+  .route("/assignments")
   .all(authenticate)
   .post(assignmentController.post)
   .get(assignmentController.get);
 
 router
-  .route("/assignment/:id")
+  .route("/assignments/:id")
   .all(checkAssignmentOwnership)
   .get(assignmentController.getOne)
   .put(assignmentController.update)
   .delete(assignmentController.remove);
+
+router
+  .route("/healthz")
+  .all(checkDbMiddleware)
+  .get(async (req, res) => {
+    res.setHeader("Cache-Control", "no-cache");
+    try {
+      const isDatabaseConnected = await checkDatabaseConnection();
+      console.log("is", isDatabaseConnected);
+
+      if (isDatabaseConnected) {
+        res.status(200).end(); // to ensure no payload is sent
+      } else {
+        res.status(503).end(); // HTTP 503 Service Unavailable
+      }
+    } catch (error) {
+      console.error("Error in health check:", error);
+      res.status(503).end(); // Handle any errors as service unavailable and to ensure no payload is sent
+    }
+  });
 
 export default router;

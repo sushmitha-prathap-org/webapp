@@ -54,7 +54,7 @@ export const update = async (request, response) => {
   try {
     const id = request.params.id;
     const updatedData = request.body;
-    // const item = await services.update(id);
+    // const updatedData.userId =
     const assignment = await Assignment.findOne({ where: { id } });
     if (assignment === null) {
       return response.status(404).json({ error: "Assignment not found" });
