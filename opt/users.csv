@@ -1,0 +1,5 @@
+firstName,lastName,email,password
+john,doe,john.doe@example.com,abc123
+john2,doe2,john.doe@example.com,abc123xyz
+jane,doe,jane.doe@example.com,xyz456
+Sushmitha,Prathap,sush.prathap@example.com,123abc
