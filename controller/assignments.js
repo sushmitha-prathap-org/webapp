@@ -14,12 +14,14 @@ const setErrorRes = (error, response) => {
 export const post = async (request, response) => {
   try {
     const payload = request.body;
+    payload.userId = request.userId;
+    console.log("payload", payload);
     if (payload.points >= 1 && payload.points <= 100) {
-      return response.status(404).end();
-    } else {
       const item = await services.save(payload);
       // const assignment = await Assignment.create(payload);
       setSuccessRes(item, response);
+    } else {
+      return response.status(404).end();
     }
   } catch (error) {
     console.log("error", error);
