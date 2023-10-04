@@ -31,6 +31,7 @@ export const post = async (request, response) => {
 
 export const get = async (request, response) => {
   try {
+    console.log("in get");
     const itemList = await services.getAll();
     setSuccessRes(itemList, response);
   } catch (error) {

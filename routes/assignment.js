@@ -10,9 +10,6 @@ import Assignment from "../models/assignment.js";
 const router = express.Router();
 
 const checkAssignmentOwnership = async (request, response, next) => {
-  if (Object.keys(request.query).length !== 0) {
-    return res.status(400).send("Bad Request");
-  }
   const user = basicAuth(request);
   console.log("user", user);
   const result = await validateUser(user.name, user.pass);
@@ -43,9 +40,6 @@ const checkAssignmentOwnership = async (request, response, next) => {
 
 // Middleware for Basic Authentication
 const authenticate = async (request, response, next) => {
-  if (Object.keys(request.query).length !== 0) {
-    return res.status(400).send("Bad Request");
-  }
   const user = basicAuth(request);
   console.log("user", user);
   if (!user) {
@@ -103,11 +97,118 @@ const checkDatabaseConnection = async () => {
   });
 };
 
+// const checkPost = (req, res, next) => {
+//   if (req.method !== "POST") {
+//     return res.status(405).send("Method Not Allowed");
+//   }
+//   if (
+//     Object.keys(req.query).length !== 0 ||
+//     Object.keys(req.params).length !== 0
+//   ) {
+//     return res.status(400).send("Bad Request");
+//   }
+//   next();
+// };
+
+router.use((req, res, next) => {
+  if (req.method === "PATCH") {
+    return res.status(405).send("Method Not Allowed");
+  }
+  next();
+});
+
+router.get("/assignments", (req, res, next) => {
+  if (req.method !== "GET") {
+    return res.status(405).send("Method Not Allowed");
+  }
+  if (
+    Object.keys(req.query).length !== 0 ||
+    Object.keys(req.body).length !== 0 ||
+    Object.keys(req.params).length !== 0
+  ) {
+    return res.status(400).send("Bad Request");
+  }
+  next();
+});
+
+router.post("/assignments", (req, res, next) => {
+  if (req.method !== "POST") {
+    return res.status(405).send("Method Not Allowed");
+  }
+  if (
+    Object.keys(req.query).length !== 0 ||
+    Object.keys(req.params).length !== 0
+  ) {
+    return res.status(400).send("Bad Request");
+  }
+  next();
+});
+
+router.get("/assignments/:id", (req, res, next) => {
+  if (req.method !== "GET") {
+    return res.status(405).send("Method Not Allowed");
+  }
+  if (
+    Object.keys(req.query).length !== 0 ||
+    Object.keys(req.body).length !== 0
+  ) {
+    return res.status(400).send("Bad Request");
+  }
+  next();
+});
+
+router.put("/assignments/:id", (req, res, next) => {
+  if (req.method !== "PUT") {
+    return res.status(405).send("Method Not Allowed");
+  }
+  if (Object.keys(req.query).length !== 0) {
+    return res.status(400).send("Bad Request");
+  }
+  next();
+});
+
+router.delete("/assignments/:id", (req, res, next) => {
+  if (req.method !== "DELETE") {
+    return res.status(405).send("Method Not Allowed");
+  }
+  if (
+    Object.keys(req.query).length !== 0 ||
+    Object.keys(req.body).length !== 0
+  ) {
+    return res.status(400).send("Bad Request");
+  }
+  next();
+});
+
+// (req, res, next) => {
+//   // render a regular page
+//   res.render('regular')
+// })
+
+// router.route("/assignments").all(authenticate);
+
+// For GET requests to "/assignments"
+// router.get(checkGetAll, assignmentController.get);
+
+// // For POST requests to "/assignments"
+// router.post(checkPost, assignmentController.post);
+
+// router.route("/assignments/:id").all(checkAssignmentOwnership);
+
+// // For GET requests to "/assignments/:id"
+// router.get(checkGet, assignmentController.getOne);
+
+// // For PUT requests to "/assignments/:id"
+// router.put(checkPut, assignmentController.update);
+
+// // For DELETE requests to "/assignments/:id"
+// router.delete(checkDel, assignmentController.remove);
+
 router
   .route("/assignments")
   .all(authenticate)
-  .post(assignmentController.post)
-  .get(assignmentController.get);
+  .get(assignmentController.get)
+  .post(assignmentController.post);
 
 router
   .route("/assignments/:id")
