@@ -4,14 +4,14 @@
     "password": "1998@Pupss",
     "database": "assignment3",
     "host": "localhost",
-    "dialect": "mariadb"
+    "dialect": "mysql"
   },
   "test": {
     "username": "root",
     "password": "1998@Pupss",
     "database": "assignment3",
     "host": "localhost",
-    "dialect": "mariadb"
+    "dialect": "mysql"
   },
   "production": {
     "username": "root",
