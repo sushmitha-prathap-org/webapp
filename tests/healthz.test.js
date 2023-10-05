@@ -19,11 +19,11 @@ describe("Health Check Endpoint", () => {
     console.log("Connected to test database");
   });
 
-  //   after(async () => {
-  //     // Close the database connection after tests
-  //     await sequelize.close();
-  //     console.log("Closed test database connection");
-  //   });
+  after(async () => {
+    // Close the database connection after tests
+    await sequelize.close();
+    console.log("Closed test database connection");
+  });
 
   it("should return 200 OK if the database is connected", async () => {
     const res = await chai.request(app).get("/healthz");
