@@ -7,7 +7,7 @@ const { expect } = chai;
 chai.use(chaiHttp);
 
 const sequelize = new Sequelize("assignment3", "root", "1998@Pupss", {
-  dialect: "mariadb",
+  dialect: "mysql",
   host: "localhost",
   port: 3306,
 });
