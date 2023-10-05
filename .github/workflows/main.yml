@@ -39,12 +39,12 @@ jobs:
       run: npm install
 
     - name: Run Integration Tests
-    #   env:
-    #     DB_HOST: localhost
-    #     DB_PORT: 3306
-    #     DB_USER: root
-    #     DB_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-    #     DB_NAME: ${{ secrets.MYSQL_DATABASE }}
+      env:
+        DB_HOST: localhost
+        DB_PORT: 3306
+        DB_USER: root
+        DB_PASSWORD: 1998@Pupss
+        DB_NAME: assignment3
       run: |
             npm run build --if-present
             npm test
