@@ -80,6 +80,7 @@ async function startServer() {
 }
 
 startServer();
+
 routes(app);
 
 const port = 9000;
