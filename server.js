@@ -71,7 +71,7 @@ app.use("/healthz", (req, res, next) => {
 async function startServer() {
   try {
     // Synchronize models with the database
-    await sequelize.sync({ force: true }); // Set force to true to recreate tables (use with caution)
+    await sequelize.sync({ force: false }); // Set force to true to recreate tables (use with caution)
 
     // Start your server here
   } catch (error) {
