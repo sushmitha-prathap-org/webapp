@@ -18,7 +18,7 @@ jobs:
           MYSQL_DATABASE: assignment3
         ports:
           - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+        # options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     defaults:
        run:
@@ -30,27 +30,36 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-
-    - name: Set Up Node.js ${{ matrix.node-version }}
+    - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        cache-dependency-path: './server/package-lock.json'
+        cache-dependency-path: './package-lock.json'
+    - run: npm install
+    - run: npm run build --if-present
+    - run: npm run test
 
-    - name: Install Dependencies
-      run: npm install
+    # - name: Set Up Node.js ${{ matrix.node-version }}
+    #   uses: actions/setup-node@v3
+    #   with:
+    #     node-version: ${{ matrix.node-version }}
+    #     cache: 'npm'
+    #     cache-dependency-path: './server/package-lock.json'
 
-    - name: Run Integration Tests
+    # - name: Install Dependencies
+    #   run: npm install
+
+    # - name: Run Integration Tests
       # env:
       #   DB_HOST: 127.0.0.1
       #   DB_PORT: 3306
       #   DB_USER: root
       #   DB_PASSWORD: 1998@Pupss
       #   DB_NAME: assignment3
-      run: |
-          npm run build --if-present
-          npm run test
+      # run: |
+      #     npm run build --if-present
+      #     npm run test
     #       npm test | ( while IFS= read -r line || [[ -n "$line" ]]; do
     #           echo "$line"
     #           if [[ "$line" == *"Connection has been established successfully"* ]]; then
