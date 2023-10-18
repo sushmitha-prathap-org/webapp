@@ -48,8 +48,8 @@ jobs:
         sleep 1
        done
        
-    - name: Run migrations  
-      run: npx sequelize-cli db:migrate
+    # - name: Run migrations  
+    #   run: npx sequelize-cli db:migrate
 
     - name: Run Integration Tests
       env:
