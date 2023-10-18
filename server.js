@@ -68,19 +68,18 @@ app.use("/healthz", (req, res, next) => {
   next();
 });
 
-// async function startServer() {
-//   try {
-//     // Synchronize models with the database
-//     await sequelize.sync({ force: false }); // Set force to true to recreate tables (use with caution)
+async function startServer() {
+  try {
+    // Synchronize models with the database
+    await sequelize.sync({ force: true }); // Set force to true to recreate tables (use with caution)
 
-//     // Start your server here
-//   } catch (error) {
-//     console.error("Error synchronizing database:", error);
-//   }
-// }
+    // Start your server here
+  } catch (error) {
+    console.error("Error synchronizing database:", error);
+  }
+}
 
-// startServer();
-
+startServer();
 routes(app);
 
 const port = 9000;
