@@ -32,36 +32,39 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Set Up Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: './server/package-lock.json'
 
     - name: Install Dependencies
       run: npm install
 
     - name: Run Integration Tests
-      env:
-        DB_HOST: 127.0.0.1
-        DB_PORT: 3306
-        DB_USER: root
-        DB_PASSWORD: 1998@Pupss
-        DB_NAME: assignment3
+      # env:
+      #   DB_HOST: 127.0.0.1
+      #   DB_PORT: 3306
+      #   DB_USER: root
+      #   DB_PASSWORD: 1998@Pupss
+      #   DB_NAME: assignment3
       run: |
           npm run build --if-present
-          npm test | ( while IFS= read -r line || [[ -n "$line" ]]; do
-              echo "$line"
-              if [[ "$line" == *"Connection has been established successfully"* ]]; then
-                pkill -P $$  # Terminate the parent process (npm test)
-              fi
-            done )
-      continue-on-error: true 
+          npm run test
+    #       npm test | ( while IFS= read -r line || [[ -n "$line" ]]; do
+    #           echo "$line"
+    #           if [[ "$line" == *"Connection has been established successfully"* ]]; then
+    #             pkill -P $$  # Terminate the parent process (npm test)
+    #           fi
+    #         done )
+    #   continue-on-error: true 
       
-    - name: Check Test Completion
-      run: |
-          test_output="${{ steps.integration_tests.outputs.stdout }}"
-          if echo "$test_output" | grep -q "Connection has been established successfully"; then
-            echo "Integration tests were successful. Continue with the workflow."
-          else
-            echo "Integration tests failed or were incomplete. Stop the workflow."
-            exit 1  # Exit the workflow with an error code
-          fi
+    # - name: Check Test Completion
+    #   run: |
+    #       test_output="${{ steps.integration_tests.outputs.stdout }}"
+    #       if echo "$test_output" | grep -q "Connection has been established successfully"; then
+    #         echo "Integration tests were successful. Continue with the workflow."
+    #       else
+    #         echo "Integration tests failed or were incomplete. Stop the workflow."
+    #         exit 1  # Exit the workflow with an error code
+    #       fi
