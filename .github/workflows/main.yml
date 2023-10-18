@@ -47,17 +47,20 @@ jobs:
         DB_PASSWORD: 1998@Pupss
         DB_NAME: assignment3
       run: |
-            npm run build --if-present
-            npm test
-            echo "Integration tests have completed."  # Add a custom message to indicate test completion
-      continue-on-error: true  # Continue the workflow even if the tests fail
-
+          npm run build --if-present
+          npm test | ( while IFS= read -r line || [[ -n "$line" ]]; do
+              echo "$line"
+              if [[ "$line" == *"Connection has been established successfully"* ]]; then
+                pkill -P $$  # Terminate the parent process (npm test)
+              fi
+            done )
+      continue-on-error: true 
     - name: Check Test Completion
       run: |
-        test_status=$(echo "${{ steps.integration_tests.outcome }}" | tr '[:upper:]' '[:lower:]')
-        if [[ "$test_status" == "success" ]]; then
-          echo "Integration tests were successful. Continue with the workflow."
-        else
-          echo "Integration tests failed or were incomplete. Stop the workflow."
-          exit 1  # Exit the workflow with an error code
-        fi
+          test_status=$(echo "${{ steps.integration_tests.outcome }}" | tr '[:upper:]' '[:lower:]')
+          if [[ "$test_status" == "success" ]]; then
+            echo "Integration tests were successful. Continue with the workflow."
+          else
+            echo "Integration tests failed or were incomplete. Stop the workflow."
+            exit 1  # Exit the workflow with an error code
+          fi
