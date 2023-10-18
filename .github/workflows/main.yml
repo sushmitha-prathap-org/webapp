@@ -38,18 +38,6 @@ jobs:
 
     - name: Install Dependencies
       run: npm install
-    
-    - name: Install MySQL client
-      run: sudo apt-get install mysql-client
-    
-    - name: Wait for MySQL
-      run: |
-       while ! mysqladmin ping -h127.0.0.1 -uroot -p$DB_PASSWORD; do
-        sleep 1
-       done
-       
-    # - name: Run migrations  
-    #   run: npx sequelize-cli db:migrate
 
     - name: Run Integration Tests
       env:
