@@ -55,10 +55,11 @@ jobs:
               fi
             done )
       continue-on-error: true 
+      
     - name: Check Test Completion
       run: |
-          test_status=$(echo "${{ steps.integration_tests.outcome }}" | tr '[:upper:]' '[:lower:]')
-          if [[ "$test_status" == "success" ]]; then
+          test_output="${{ steps.integration_tests.outputs.stdout }}"
+          if echo "$test_output" | grep -q "Connection has been established successfully"; then
             echo "Integration tests were successful. Continue with the workflow."
           else
             echo "Integration tests failed or were incomplete. Stop the workflow."
