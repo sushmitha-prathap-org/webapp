@@ -80,7 +80,7 @@ jobs:
       run: |
          pwd
          ls
-         packer init ./app/packer/aws-us-east-1.pkr.hcl
+         packer init ./packer/aws-us-east-1.pkr.hcl
 
     - name: Build AMI
-      run: packer build ./app/packer/aws-us-east-1.pkr.hcl
+      run: packer build ./packer/aws-us-east-1.pkr.hcl
