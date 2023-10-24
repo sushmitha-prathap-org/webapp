@@ -2,8 +2,9 @@ name: Packer Validation Workflow
 
 on:
   pull_request:
-    types:
-      - "opened"
+    branches: [ "main" ]
+    # types:
+    #   - "opened"
     # paths:
     #   - 'packer/aws-us-east-1.pkr.hcl' 
 
@@ -24,11 +25,7 @@ jobs:
         with:
           version: ${{ env.PRODUCT_VERSION }}
 
-      - name: Change to Packer directory
-        run: cd packer
-
-      - name: Packer fmt
-        run: packer fmt aws-us-east-1.pkr.hcl
-
-      - name: Packer validate
-        run: packer validate aws-us-east-1.pkr.hcl
+      - name: Packer fmt and validate
+        run: |
+         packer fmt ./packer/aws-us-east-1.pkr.hcl
+         packer validate ./packer/aws-us-east-1.pkr.hcl
