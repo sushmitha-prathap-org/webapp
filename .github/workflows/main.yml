@@ -61,7 +61,12 @@ jobs:
     - name: Create a zip archive
       run: |
         cd ..
-        zip -FSr webapp.zip app
+        zip -r webapp.zip app/
+        zip -r ./app/packer/webapp.zip app/
+
+    - name: list dir
+      run: |
+        ls
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
