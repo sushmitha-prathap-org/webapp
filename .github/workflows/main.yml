@@ -6,6 +6,9 @@ on:
   # pull_request:
   #   branches: [ "main" ]
 
+env:
+  PRODUCT_VERSION: "1.9.4" # or: "latest"
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -22,7 +25,7 @@ jobs:
 
     defaults:
        run:
-         working-directory: ./
+         working-directory: ./app/
 
     strategy:
       matrix:
@@ -35,6 +38,8 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: './app/package-lock.json'
 
     - name: Install Dependencies
       run: npm install
@@ -49,3 +54,28 @@ jobs:
       run: |
             npm run build --if-present
             npm test
+
+    - name: Install zip
+      run: sudo apt-get -y install zip
+
+    - name: Create a zip archive
+      run: zip -r webapp.zip app
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Setup `packer`
+      uses: hashicorp/setup-packer@main
+      id: setup
+      with:
+        version: ${{ env.PRODUCT_VERSION }}
+
+    - name: Packer Init
+      run: packer init ./app/packer/aws-us-east-1.pkr.hcl
+
+    - name: Build AMI
+      run: packer build ./app/packer/aws-us-east-1.pkr.hcl

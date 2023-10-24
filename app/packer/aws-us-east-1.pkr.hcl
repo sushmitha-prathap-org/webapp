@@ -65,7 +65,31 @@ build {
       "FLUSH PRIVILEGES;",
       "EOF",
       "sudo apt-get install unzip -y",
+
+      "sudo mkdir /opt/demo",
+    ]
+  }
+
+  provisioner "file" {
+    source      = "../../webapp.zip"
+    destination = "/tmp/webapp.zip"
+  }
+
+  provisioner "shell" {
+    inline = [
+      "sudo mv /tmp/webapp.zip /opt/demo/webapp.zip",
+      "sudo unzip /opt/demo/webapp.zip -d /opt/demo/",
+      "cd /opt/demo/webapp",
+      "sudo npm install",
       "sudo apt-get clean"
     ]
+  }
+
+  post-processor "manifest" {
+    output     = "packer_manifest.json"
+    strip_path = true
+    custom_data = {
+      iteration_id = packer.iterationID
+    }
   }
 }
