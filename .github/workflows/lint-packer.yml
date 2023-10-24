@@ -14,20 +14,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        
+      - name: Use Packer
+        uses: hashicorp/setup-packer@v1
+        with:
+          packer-version: '1.9.4'
 
       - name: Change to Packer directory
         run: cd packer
 
       - name: Packer fmt
-        run: | #trying
-         if ! packer fmt .; then
-            echo "Packer validate failed. Please fix the issues in your Packer template."
-            exit 1
-          fi
+        run: packer fmt .
 
       - name: Packer validate
-        run: |
-          if ! packer validate .; then
-            echo "Packer validate failed. Please fix the issues in your Packer template."
-            exit 1
-          fi
+        run: packer validate .
