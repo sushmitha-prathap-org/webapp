@@ -59,7 +59,9 @@ jobs:
       run: sudo apt-get -y install zip
 
     - name: Create a zip archive
-      run: zip -FSr webapp.zip app
+      run: |
+        cd ../
+        zip -FSr webapp.zip app
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
