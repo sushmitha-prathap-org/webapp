@@ -25,6 +25,15 @@ jobs:
         with:
           version: ${{ env.PRODUCT_VERSION }}
 
+      - name: Install zip
+        run: sudo apt-get -y install zip
+
+      - name: Create a zip archive
+        run: |
+           zip -r ./app/packer/webapp.zip ./app/
+           cd ./app/packer
+           ls
+
       - name: Packer init
         run: packer init ./app/packer/aws-us-east-1.pkr.hcl
 
