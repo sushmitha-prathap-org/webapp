@@ -6,6 +6,7 @@ on:
       - "opened"
     # paths:
     #   - 'packer/aws-us-east-1.pkr.hcl' 
+    #
 
 jobs:
   validate:
