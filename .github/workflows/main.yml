@@ -56,7 +56,9 @@ jobs:
             npm test
 
     - name: Install zip
-      run: sudo apt-get -y install zip
+      run: |
+        cd ../
+        sudo apt-get -y install zip
 
     - name: Create a zip archive
       run: zip -FSr webapp.zip app
