@@ -27,5 +27,6 @@ jobs:
 
       - name: Packer fmt and validate
         run: |
+         packer init ./packer/aws-us-east-1.pkr.hcl
          packer fmt ./packer/aws-us-east-1.pkr.hcl
          packer validate ./packer/aws-us-east-1.pkr.hcl
