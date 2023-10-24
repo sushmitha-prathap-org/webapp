@@ -1,0 +1,31 @@
+name: Packer Validation Workflow
+
+on:
+  pull_request:
+    paths:
+      - 'packer/aws-us-east-1.pkr.hcl' 
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Change to Packer directory
+        run: cd packer
+
+      - name: Packer fmt
+        run: |
+         if ! packer fmt aws-us-east-1.pkr.hcl; then
+            echo "Packer validate failed. Please fix the issues in your Packer template."
+            exit 1
+          fi
+
+      - name: Packer validate
+        run: |
+          if ! packer validate aws-us-east-1.pkr.hcl; then
+            echo "Packer validate failed. Please fix the issues in your Packer template."
+            exit 1
+          fi

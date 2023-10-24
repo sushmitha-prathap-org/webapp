@@ -24,7 +24,7 @@ const createUser = () => {
         if (!existingUser) {
           // Create a new user if it doesn't exist
           const hashedPassword = await bcrypt.hash(row.password, 1); // Use 1 rounds of hashing
-          console.log("hashed pa", hashedPassword);
+          // console.log("hashed pa", hashedPassword);
 
           await User.create({
             firstName: row.firstName,
