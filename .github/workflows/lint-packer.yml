@@ -2,11 +2,11 @@ name: Packer Validation Workflow
 
 on:
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
     # types:
     #   - "opened"
     # paths:
-    #   - 'packer/aws-us-east-1.pkr.hcl' 
+    #   - 'packer/aws-us-east-1.pkr.hcl'
 
 env:
   PRODUCT_VERSION: "1.9.4" # or: "latest"
@@ -30,9 +30,8 @@ jobs:
 
       - name: Create a zip archive
         run: |
-           zip -r ./app/packer/webapp.zip ./app/
-           cd ./app/packer
-           ls
+          zip -r ./webapp.zip ./app/
+          ls
 
       - name: Packer init
         run: packer init ./app/packer/aws-us-east-1.pkr.hcl

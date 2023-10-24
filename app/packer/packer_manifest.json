@@ -10,7 +10,18 @@
       "custom_data": {
         "iteration_id": "\u003cunknown\u003e"
       }
+    },
+    {
+      "name": "my-ami",
+      "builder_type": "amazon-ebs",
+      "build_time": 1698189542,
+      "files": null,
+      "artifact_id": "us-east-1:ami-0ce6083c20d73e028",
+      "packer_run_uuid": "465ccfa8-4e5b-fd09-92be-41bb039058be",
+      "custom_data": {
+        "iteration_id": "\u003cunknown\u003e"
+      }
     }
   ],
-  "last_run_uuid": "b0b4b77b-76c3-708d-337a-9584050d6b93"
+  "last_run_uuid": "465ccfa8-4e5b-fd09-92be-41bb039058be"
 }
