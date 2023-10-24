@@ -1,39 +1,45 @@
-import chai from "chai";
-import chaiHttp from "chai-http";
-import { Sequelize } from "sequelize";
+// import chai from "chai";
+// import chaiHttp from "chai-http";
+// import sequelize from "../database/database.js";
+// import app from "../server.js";
+// const { expect } = chai;
+
+// chai.use(chaiHttp);
+
+// describe("Health Check Endpoint", () => {
+//   before(async () => {
+//     // Connect to the test database
+//     await sequelize.authenticate();
+//     console.log("Connected to test database");
+//   });
+
+//   // after(async () => {
+//   //   // Close the database connection after tests
+//   //   await sequelize.close();
+//   //   console.log("Closed test database connection");
+//   // });
+
+//   it("should return 200 OK if the database is connected", async () => {
+//     const res = await chai.request(app).get("/healthCheck/healthz");
+//     expect(res).to.have.status(200);
+//   });
+
+// });
+
+import request from "supertest";
 import app from "../server.js";
-const { expect } = chai;
 
-chai.use(chaiHttp);
-
-const sequelize = new Sequelize("assignment3", "root", "1998@Pupss", {
-  dialect: "mysql",
-  host: "localhost",
-  port: 3306,
+beforeAll((done) => {
+  done();
 });
 
-describe("Health Check Endpoint", () => {
-  before(async () => {
-    // Connect to the test database
-    await sequelize.authenticate();
-    console.log("Connected to test database");
+describe("GET /healthz", () => {
+  it("should return 200", async () => {
+    const res = await request(app).get("/healthCheck/healthz");
+    expect(res.statusCode).toBe(200);
   });
+});
 
-  after(async () => {
-    // Close the database connection after tests
-    await sequelize.close();
-    console.log("Closed test database connection");
-  });
-
-  it("should return 200 OK if the database is connected", async () => {
-    const res = await chai.request(app).get("/healthz");
-    expect(res).to.have.status(200);
-  });
-
-  //   it("should return 503 Service Unavailable if the database connection fails", async () => {
-  //     // Mock the Sequelize.authenticate method to simulate a database connection failure
-  //     const originalAuthenticate = sequelize.authenticate;
-  //     sequelize.authenticate = async () => {
-  //       throw new Error("Database connection failed");
-  //     };
+afterAll((done) => {
+  done();
 });

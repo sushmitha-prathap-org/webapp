@@ -1,5 +1,5 @@
 import { Sequelize, DataTypes } from "sequelize";
-import sequelize from "../database.js";
+import sequelize from "../database/database.js";
 import User from "./user.js";
 
 const Assignment = sequelize.define(
@@ -58,14 +58,11 @@ const Assignment = sequelize.define(
 
 console.log("in assignment model", Assignment === sequelize.models.Assignment); // true
 
-// `sequelize.define` also returns the model
-console.log(Assignment === sequelize.models.Assignment); // true
-
 User.hasMany(Assignment, { foreignKey: "userId" });
 Assignment.belongsTo(User, { foreignKey: "userId" });
 
-Assignment.sync().then(() => {
-  console.log("assignment table created");
-});
+// Assignment.sync().then(() => {
+//   console.log("assignment table created");
+// });
 
 export default Assignment;

@@ -1,5 +1,5 @@
 import { Sequelize, DataTypes } from "sequelize";
-import sequelize from "../database.js";
+import sequelize from "../database/database.js";
 
 const User = sequelize.define(
   "User",
@@ -41,8 +41,8 @@ const User = sequelize.define(
 
 console.log("in model", User === sequelize.models.User); // true
 
-User.sync().then(() => {
-  console.log("user table created");
-});
+// User.sync().then(() => {
+//   console.log("user table created");
+// });
 
 export default User;
