@@ -2,8 +2,10 @@ name: Packer Validation Workflow
 
 on:
   pull_request:
-    paths:
-      - 'packer/aws-us-east-1.pkr.hcl' 
+    types:
+      - "opened"
+    # paths:
+    #   - 'packer/aws-us-east-1.pkr.hcl' 
 
 jobs:
   validate:
@@ -18,14 +20,14 @@ jobs:
 
       - name: Packer fmt
         run: |
-         if ! packer fmt aws-us-east-1.pkr.hcl; then
+         if ! packer fmt .; then
             echo "Packer validate failed. Please fix the issues in your Packer template."
             exit 1
           fi
 
       - name: Packer validate
         run: |
-          if ! packer validate aws-us-east-1.pkr.hcl; then
+          if ! packer validate .; then
             echo "Packer validate failed. Please fix the issues in your Packer template."
             exit 1
           fi
