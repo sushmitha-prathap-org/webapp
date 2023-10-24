@@ -19,7 +19,7 @@ jobs:
         run: cd packer
 
       - name: Packer fmt
-        run: |
+        run: | #trying
          if ! packer fmt .; then
             echo "Packer validate failed. Please fix the issues in your Packer template."
             exit 1
