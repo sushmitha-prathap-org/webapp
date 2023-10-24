@@ -2,9 +2,9 @@ name: Node.js CI with mysql
 
 on:
   push:
-    branches: [ "main", "assignment3" ]
-  pull_request:
     branches: [ "main" ]
+  # pull_request:
+  #   branches: [ "main" ]
 
 jobs:
   build:

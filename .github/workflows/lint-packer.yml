@@ -2,10 +2,14 @@ name: Packer Validation Workflow
 
 on:
   pull_request:
-    types:
-      - "opened"
+    branches: [ "main" ]
+    # types:
+    #   - "opened"
     # paths:
     #   - 'packer/aws-us-east-1.pkr.hcl' 
+
+env:
+  PRODUCT_VERSION: "1.9.4" # or: "latest"
 
 jobs:
   validate:
@@ -14,17 +18,18 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        
-      - name: Use Packer
-        uses: hashicorp/setup-packer@v1
-        with:
-          packer-version: '1.9.4'
 
-      - name: Change to Packer directory
-        run: cd packer
+      - name: Setup `packer`
+        uses: hashicorp/setup-packer@main
+        id: setup
+        with:
+          version: ${{ env.PRODUCT_VERSION }}
+
+      - name: Packer init
+        run: packer init ./packer/aws-us-east-1.pkr.hcl
 
       - name: Packer fmt
-        run: packer fmt .
+        run: packer fmt ./packer/aws-us-east-1.pkr.hcl
 
       - name: Packer validate
-        run: packer validate .
+        run: packer validate ./packer/aws-us-east-1.pkr.hcl
