@@ -25,8 +25,11 @@ jobs:
         with:
           version: ${{ env.PRODUCT_VERSION }}
 
-      - name: Packer fmt and validate
-        run: |
-         packer init ./packer/aws-us-east-1.pkr.hcl
-         packer fmt ./packer/aws-us-east-1.pkr.hcl
-         packer validate ./packer/aws-us-east-1.pkr.hcl
+      - name: Packer init
+        run: packer init ./packer/aws-us-east-1.pkr.hcl
+
+      - name: Packer fmt
+        run: packer fmt ./packer/aws-us-east-1.pkr.hcl
+
+      - name: Packer validate
+        run: packer validate ./packer/aws-us-east-1.pkr.hcl
