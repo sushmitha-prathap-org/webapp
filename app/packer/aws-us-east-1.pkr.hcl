@@ -71,7 +71,7 @@ build {
   }
 
   provisioner "file" {
-    source      = "../../webapp.zip"
+    source      = "/github/workspace/webapp.zip"
     destination = "/tmp/webapp.zip"
   }
 
