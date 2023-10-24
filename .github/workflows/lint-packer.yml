@@ -1,0 +1,30 @@
+name: Packer Validation Workflow
+
+on:
+  pull_request:
+    types:
+      - "opened"
+    # paths:
+    #   - 'packer/aws-us-east-1.pkr.hcl' 
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Use Packer
+        uses: hashicorp/setup-packer@v1
+        with:
+          packer-version: '1.9.4'
+
+      - name: Change to Packer directory
+        run: cd packer
+
+      - name: Packer fmt
+        run: packer fmt .
+
+      - name: Packer validate
+        run: packer validate .
