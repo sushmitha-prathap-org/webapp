@@ -77,7 +77,10 @@ jobs:
         version: ${{ env.PRODUCT_VERSION }}
 
     - name: Packer Init
-      run: packer init ./app/packer/aws-us-east-1.pkr.hcl
+      run: |
+         pwd
+         ls
+         packer init ./app/packer/aws-us-east-1.pkr.hcl
 
     - name: Build AMI
       run: packer build ./app/packer/aws-us-east-1.pkr.hcl
