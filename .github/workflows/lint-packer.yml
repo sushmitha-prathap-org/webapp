@@ -24,7 +24,7 @@ jobs:
         run: cd packer
 
       - name: Packer fmt
-        run: packer fmt .
+        run: packer fmt aws-us-east-1.pkr.hcl
 
       - name: Packer validate
-        run: packer validate .
+        run: packer validate aws-us-east-1.pkr.hcl
