@@ -60,9 +60,10 @@ jobs:
 
     - name: Create a zip archive
       run: |
+        zip -r ../webapp.zip app/
+        zip -r ./packer/webapp.zip app/
         cd ..
-        zip -r webapp.zip app/
-        zip -r ./app/packer/webapp.zip app/
+        ls
 
     - name: list dir
       run: |
