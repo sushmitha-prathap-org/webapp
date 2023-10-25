@@ -8,7 +8,7 @@ env:
   PRODUCT_VERSION: "1.9.4" # or: "latest"
 
 jobs:
-  validate:
+  ami:
     runs-on: ubuntu-latest
 
     steps:
