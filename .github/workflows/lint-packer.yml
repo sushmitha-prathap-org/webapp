@@ -37,7 +37,7 @@ jobs:
         run: packer init ./app/packer/aws-us-east-1.pkr.hcl
 
       - name: Packer fmt
-        run: packer fmt ./app/packer/aws-us-east-1.pkr.hcl
+        run: packer fmt -check ./app/packer/aws-us-east-1.pkr.hcl
 
       - name: Packer validate
         run: packer validate ./app/packer/aws-us-east-1.pkr.hcl
