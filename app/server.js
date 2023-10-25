@@ -1,10 +1,6 @@
 import express from "express";
 import cors from "cors";
 import sequelize from "./database/database.js";
-import fs from "fs";
-import csvParser from "csv-parser";
-import User from "./models/user.js";
-import bcrypt from "bcrypt";
 import * as routes from "./routes/index.js";
 import createUser from "./database/user-creation.js";
 
