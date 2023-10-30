@@ -83,11 +83,12 @@ build {
 
   provisioner "file" {
     source      = "node-run.service"
-    destination = "/lib/systemd/system/node-run.service"
+    destination = "/tmp/node-run.service"
   }
 
   provisioner "shell" {
     inline = [
+      "sudo mv /tmp/node-run.service /lib/systemd/system/node-run.service",
       "sudo systemctl daemon-reload",
       "sudo systemctl enable node-run",
       "sudo systemctl start node-run",
