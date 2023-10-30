@@ -59,14 +59,7 @@ build {
     inline = [
       "sudo apt-get update",
       "sudo apt-get install -y nodejs npm",
-      "sudo apt-get install -y mariadb-server",
-      "sudo mysql -e \"CREATE DATABASE assignment3;\"",
-      "sudo mysql -u root --skip-password << EOF",
-      "ALTER USER 'root'@'localhost' IDENTIFIED BY '1998@Pupss';",
-      "FLUSH PRIVILEGES;",
-      "EOF",
       "sudo apt-get install unzip -y",
-
       "sudo mkdir /opt/demo",
     ]
   }
@@ -82,6 +75,13 @@ build {
       "sudo unzip /opt/demo/webapp.zip -d /opt/demo/",
       "cd /opt/demo/webapp",
       "sudo npm install",
+      "sudo groupadd nodeuser",
+      "sudo useradd -r -s /sbin/nologin nodeuser",
+      "sudo chown -R nodeuser:nodeuser /opt/demo/webapp",
+      "sudo cp node-run.service /lib/systemd/system/node-run.service"
+      "sudo systemctl daemon-reload",
+      "sudo systemctl enable node-run",
+      "sudo systemctl start node-run",
       "sudo apt-get clean"
     ]
   }
