@@ -76,7 +76,7 @@ build {
       "cd /opt/demo/webapp",
       "sudo npm install",
       "sudo groupadd nodeuser",
-      "sudo useradd -r -s /sbin/nologin nodeuser",
+      "sudo useradd -s /bin/false -g nodeuser -d /opt/nodeuser -m nodeuser",
       "sudo chown -R nodeuser:nodeuser /opt/demo/webapp",
       "sudo cp node-run.service /lib/systemd/system/node-run.service",
       "sudo systemctl daemon-reload",
