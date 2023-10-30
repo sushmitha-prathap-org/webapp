@@ -1,4 +1,5 @@
 import { Sequelize } from "sequelize";
+import "dotenv/config";
 
 const username = process.env.dbUser;
 const pass = process.env.dbPassword;
