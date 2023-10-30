@@ -12,9 +12,13 @@ const router = express.Router();
 const checkAssignmentOwnership = async (request, response, next) => {
   const user = basicAuth(request);
   console.log("user", user);
+  if (!user) {
+    // response.set("WWW-Authenticate", 'Basic realm="Basic Authentication"');
+    return response.status(401).send("Unauthorized");
+  }
   const result = await validateUser(user.name, user.pass);
   console.log("result", result);
-  if (!user || !result) {
+  if (!result) {
     // response.set("WWW-Authenticate", 'Basic realm="Basic Authentication"');
     return response.status(401).send("Unauthorized");
   }
