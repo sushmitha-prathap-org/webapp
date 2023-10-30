@@ -6,8 +6,8 @@ on:
 
 env:
   PRODUCT_VERSION: "1.9.4" # or: "latest"
-  dbUser: ${{ secrets.DBUSER }}  
-  dbPassword: ${{ secrets.PASSWORD }}
+  dbUser: "root" 
+  dbPassword: "password"
   dbHost: "127.0.0.1"
   database: "assignment3"
 
