@@ -23,6 +23,9 @@ jobs:
           zip -r ./webapp.zip ./app/
           ls
 
+      - name: Verify Zip File Creation
+        run: sudo ls -l ./webapp.zip
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
