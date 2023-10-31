@@ -7,7 +7,7 @@ packer {
   }
 }
 
-variable "aws_region"   {
+variable "aws_region" {
   type    = string
   default = "us-east-1"
 }
@@ -29,7 +29,7 @@ variable "subnet_id" {
 
 source "amazon-ebs" "my-ami" {
   ami_name        = "csye6225_${formatdate("YYYY_MM_DD_hh_mm_ss", timestamp())}"
-  region          = var.aws_region
+  region          = var.aws_regions
   ami_description = "AMI for CSYE 6225"
   ami_users       = ["924749429410", "903587831963"]
 
