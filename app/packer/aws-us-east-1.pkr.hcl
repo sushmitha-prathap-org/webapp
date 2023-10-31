@@ -72,12 +72,11 @@ build {
   provisioner "shell" {
     inline = [
       "sudo mv /tmp/webapp.zip /opt/demo/webapp.zip",
+      "sudo ls -l /opt/demo/",
       "sudo unzip /opt/demo/webapp.zip -d /opt/demo/",
+      "sudo ls -l /opt/demo/webapp",
       "cd /opt/demo/webapp",
       "sudo npm install",
-      "sudo groupadd nodeuser",
-      "sudo useradd -s /bin/false -g nodeuser -d /opt/nodeuser -m nodeuser",
-      "sudo chown -R nodeuser:nodeuser /opt/demo/webapp",
     ]
   }
 
@@ -88,6 +87,9 @@ build {
 
   provisioner "shell" {
     inline = [
+      "sudo groupadd nodeuser",
+      "sudo useradd -s /bin/false -g nodeuser -d /opt/nodeuser -m nodeuser",
+      "sudo chown -R nodeuser:nodeuser /opt/demo/webapp",
       "sudo mv /tmp/node-run.service /etc/systemd/system/node-run.service",
       "sudo systemctl daemon-reload",
       "sudo systemctl enable node-run",
