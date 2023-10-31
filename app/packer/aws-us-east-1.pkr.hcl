@@ -71,11 +71,12 @@ build {
 
   provisioner "shell" {
     inline = [
+      "sudo mkdir -p /opt/demo/webapp",
       "sudo mv /tmp/webapp.zip /opt/demo/webapp.zip",
       "sudo ls -l /opt/demo/",
       "sudo unzip /opt/demo/webapp.zip -d /opt/demo/",
-      "sudo ls -l /opt/demo/webapp",
-      "cd /opt/demo/webapp",
+      "sudo ls /opt/demo",
+      "cd /opt/demo/app",
       "sudo npm install",
     ]
   }
