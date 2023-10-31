@@ -6,10 +6,11 @@ After=cloud-final.service
 [Service]
 EnvironmentFile=/etc/environment
 Type=simple
-User=appuser
+User=nodeuser
+Group=nodeuser
+WorkingDirectory=/opt/demo/webapp
 ExecStart=/usr/bin/node /opt/demo/webapp/server.js
 Restart=on-failure
-WorkingDirectory=/opt/demo/webapp
  
 [Install]
 WantedBy=cloud-init.target

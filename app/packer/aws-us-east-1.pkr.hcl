@@ -88,6 +88,7 @@ build {
 
   provisioner "shell" {
     inline = [
+      "sudo mv /tmp/node-run.service /etc/systemd/system/node-run.service",
       "sudo systemctl daemon-reload",
       "sudo systemctl enable node-run",
       "sudo systemctl start node-run",
