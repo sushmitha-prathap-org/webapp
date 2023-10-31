@@ -8,8 +8,8 @@ EnvironmentFile=/etc/environment
 Type=simple
 User=nodeuser
 Group=nodeuser
-WorkingDirectory=/opt/demo/webapp
-ExecStart=/usr/bin/node /opt/demo/webapp/server.js
+WorkingDirectory=/opt/demo/app
+ExecStart=/usr/bin/node /opt/demo/app/server.js
 Restart=on-failure
  
 [Install]

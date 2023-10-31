@@ -89,7 +89,7 @@ build {
     inline = [
       "sudo groupadd nodeuser",
       "sudo useradd -s /bin/false -g nodeuser -d /opt/nodeuser -m nodeuser",
-      "sudo chown -R nodeuser:nodeuser /opt/demo/webapp",
+      "sudo chown -R nodeuser:nodeuser /opt/demo/app",
       "sudo mv /tmp/node-run.service /etc/systemd/system/node-run.service",
       "sudo systemctl daemon-reload",
       "sudo systemctl enable node-run",
