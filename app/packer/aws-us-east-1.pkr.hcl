@@ -83,7 +83,7 @@ build {
 
   provisioner "file" {
     source      = "node-run.service"
-    destination = "/lib/systemd/system/node-run.service"
+    destination = "/tmp/node-run.service"
   }
 
   provisioner "shell" {
