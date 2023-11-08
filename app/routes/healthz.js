@@ -1,7 +1,10 @@
 import express from "express";
 import sequelize from "../database/database.js";
+import logger from "../logger.js";
 
 const router = express.Router();
+
+let count = 0;
 
 const checkDbMiddleware = (req, res, next) => {
   console.log("in healthz middleware");
@@ -26,9 +29,11 @@ const checkDatabaseConnection = async () => {
     try {
       await sequelize.authenticate();
       console.log("Connection has been established successfully.");
+      logger.info("Connection has been established successfully.");
       resolve(true);
     } catch (error) {
       console.error("Unable to connect to the database:", error);
+      logger.error("Unable to connect to the database");
       reject(error);
     }
   });
@@ -39,6 +44,7 @@ router
   .all(checkDbMiddleware)
   .get(async (req, res) => {
     res.setHeader("Cache-Control", "no-cache");
+    logger.info(`healthz API count:${count + 1}`);
     try {
       const isDatabaseConnected = await checkDatabaseConnection();
       console.log("is", isDatabaseConnected);

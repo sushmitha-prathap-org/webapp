@@ -6,6 +6,7 @@ import sequelize from "../database/database.js";
 import * as assignmentController from "../controller/assignments.js";
 import User from "../models/user.js";
 import Assignment from "../models/assignment.js";
+import logger from "../logger.js";
 
 const router = express.Router();
 
@@ -13,12 +14,14 @@ const checkAssignmentOwnership = async (request, response, next) => {
   const user = basicAuth(request);
   console.log("user", user);
   if (!user) {
+    logger.error("Unauthorized");
     // response.set("WWW-Authenticate", 'Basic realm="Basic Authentication"');
     return response.status(401).send("Unauthorized");
   }
   const result = await validateUser(user.name, user.pass);
   console.log("result", result);
   if (!result) {
+    logger.error("Unauthorized");
     // response.set("WWW-Authenticate", 'Basic realm="Basic Authentication"');
     return response.status(401).send("Unauthorized");
   }
@@ -28,6 +31,7 @@ const checkAssignmentOwnership = async (request, response, next) => {
   //   console.log("ass", assignment);
 
   if (!assignment) {
+    logger.error("Assignment not found");
     return response.status(404).json({ error: "Assignment not found" });
   }
 
@@ -47,11 +51,13 @@ const authenticate = async (request, response, next) => {
   const user = basicAuth(request);
   console.log("user", user);
   if (!user) {
+    logger.error("Unauthorized");
     return response.status(401).send("Unauthorized");
   }
   const result = await validateUser(user.name, user.pass);
   console.log("result", result);
   if (!result) {
+    logger.error("Unauthorized");
     return response.status(401).send("Unauthorized");
   }
   request.userId = result.id;
@@ -86,71 +92,93 @@ const validateUser = async (email, password) => {
 
 router.use((req, res, next) => {
   if (req.method === "PATCH") {
+    logger.error("Method Not Allowed");
     return res.status(405).send("Method Not Allowed");
   }
   next();
 });
 
+let getCount = 0;
+let postCount = 0;
+let getCountId = 0;
+let putCount = 0;
+let deleteCount = 0;
+
 router.get("/assignments", (req, res, next) => {
   if (req.method !== "GET") {
-    return res.status(405).send("Method Not Allowed");
+    logger.error("Method Not Allowed");
+    return res.status(405).send("Method Not Allowed - need get");
   }
   if (
     Object.keys(req.query).length !== 0 ||
     Object.keys(req.body).length !== 0 ||
     Object.keys(req.params).length !== 0
   ) {
+    logger.error("Bad Request - has query or body or params");
     return res.status(400).send("Bad Request");
   }
+  logger.info(`get assignments count: ${getCount++}`);
   next();
 });
 
 router.post("/assignments", (req, res, next) => {
   if (req.method !== "POST") {
+    logger.error("Method Not Allowed - need post");
     return res.status(405).send("Method Not Allowed");
   }
   if (
     Object.keys(req.query).length !== 0 ||
     Object.keys(req.params).length !== 0
   ) {
+    logger.error("Bad Request - has query or params");
     return res.status(400).send("Bad Request");
   }
+  logger.info(`post assignments count: ${postCount++}`);
   next();
 });
 
 router.get("/assignments/:id", (req, res, next) => {
   if (req.method !== "GET") {
+    logger.error("Method Not Allowed - need Get");
     return res.status(405).send("Method Not Allowed");
   }
   if (
     Object.keys(req.query).length !== 0 ||
     Object.keys(req.body).length !== 0
   ) {
+    logger.error("Bad Request - has query or params");
     return res.status(400).send("Bad Request");
   }
+  logger.info(`get assignments by id count: ${getCountId++}`);
   next();
 });
 
 router.put("/assignments/:id", (req, res, next) => {
   if (req.method !== "PUT") {
+    logger.error("Method Not Allowed - need Put");
     return res.status(405).send("Method Not Allowed");
   }
   if (Object.keys(req.query).length !== 0) {
+    logger.error("Bad Request - has query");
     return res.status(400).send("Bad Request");
   }
+  logger.info(`put assignments count: ${putCount++}`);
   next();
 });
 
 router.delete("/assignments/:id", (req, res, next) => {
   if (req.method !== "DELETE") {
+    logger.error("Method Not Allowed - need Delete");
     return res.status(405).send("Method Not Allowed");
   }
   if (
     Object.keys(req.query).length !== 0 ||
     Object.keys(req.body).length !== 0
   ) {
+    logger.error("Bad Request - has query or body");
     return res.status(400).send("Bad Request");
   }
+  logger.info(`delete assignments count: ${deleteCount++}`);
   next();
 });
 
