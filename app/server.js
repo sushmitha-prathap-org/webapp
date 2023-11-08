@@ -3,6 +3,7 @@ import cors from "cors";
 import sequelize from "./database/database.js";
 import * as routes from "./routes/index.js";
 import createUser from "./database/user-creation.js";
+import logger from "./logger.js";
 
 try {
   let sqlSync = async () => {
@@ -12,6 +13,7 @@ try {
   createUser();
 } catch (err) {
   console.log("Bootstrap error", err);
+  logger.error("Bootstrap error");
 }
 
 // const startServer = async () => {
@@ -40,6 +42,7 @@ const port = 9000;
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
+  logger.info(`Server running on port ${port}`);
 });
 
 export default app;
