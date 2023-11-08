@@ -9,11 +9,7 @@ import Assignment from "../models/assignment.js";
 import logger from "../logger.js";
 import Lynx from "lynx";
 
-const getAssignments = new Lynx("localhost", 8125);
-const getAssignment = new Lynx("localhost", 8125);
-const postAssignments = new Lynx("localhost", 8125);
-const putAssignments = new Lynx("localhost", 8125);
-const deleteAssignments = new Lynx("localhost", 8125);
+const assignments = new Lynx("localhost", 8125);
 
 const router = express.Router();
 
@@ -125,7 +121,7 @@ router.get("/assignments", (req, res, next) => {
     return res.status(400).send("Bad Request");
   }
   logger.info(`get assignments count: ${getCount++}`);
-  getAssignments.increment("get-assignments.total");
+  assignments.increment("get-assignments.total");
   next();
 });
 
@@ -142,7 +138,7 @@ router.post("/assignments", (req, res, next) => {
     return res.status(400).send("Bad Request");
   }
   logger.info(`post assignments count: ${postCount++}`);
-  postAssignments.increment("post-assignments.total");
+  assignments.increment("post-assignments.total");
   next();
 });
 
@@ -159,7 +155,7 @@ router.get("/assignments/:id", (req, res, next) => {
     return res.status(400).send("Bad Request");
   }
   logger.info(`get assignments by id count: ${getCountId++}`);
-  getAssignment.increment("get-assignment.total");
+  assignments.increment("get-assignment.total");
   next();
 });
 
@@ -173,7 +169,7 @@ router.put("/assignments/:id", (req, res, next) => {
     return res.status(400).send("Bad Request");
   }
   logger.info(`put assignments count: ${putCount++}`);
-  putAssignments.increment("put-assignments.total");
+  assignments.increment("put-assignments.total");
   next();
 });
 
@@ -190,7 +186,7 @@ router.delete("/assignments/:id", (req, res, next) => {
     return res.status(400).send("Bad Request");
   }
   logger.info(`delete assignments count: ${deleteCount++}`);
-  deleteAssignments.increment("delete-assignments.total");
+  assignments.increment("delete-assignments.total");
   next();
 });
 
