@@ -13,7 +13,7 @@ try {
   createUser();
 } catch (err) {
   console.log("Bootstrap error", err);
-  logger.error("Bootstrap error");
+  logger.error("Bootstrap error")
 }
 
 // const startServer = async () => {
