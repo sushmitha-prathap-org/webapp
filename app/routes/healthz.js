@@ -1,6 +1,9 @@
 import express from "express";
 import sequelize from "../database/database.js";
 import logger from "../logger.js";
+import Lynx from "lynx";
+
+const healthMetrics = new Lynx("localhost", 8125);
 
 const router = express.Router();
 
@@ -44,7 +47,7 @@ router
   .all(checkDbMiddleware)
   .get(async (req, res) => {
     res.setHeader("Cache-Control", "no-cache");
-    logger.info(`healthz API count:${count + 1}`);
+    healthMetrics.increment("health-counter.total");
     try {
       const isDatabaseConnected = await checkDatabaseConnection();
       console.log("is", isDatabaseConnected);
