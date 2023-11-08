@@ -99,10 +99,10 @@ build {
       "sudo chown -R nodeuser:nodeuser /opt/demo/app",
       "sudo mv /tmp/config.json /opt/config.json",
       "sudo mv /tmp/node-run.service /etc/systemd/system/node-run.service",
-      "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/opt/config.json -s",
       "sudo systemctl daemon-reload",
       "sudo systemctl enable node-run",
       "sudo systemctl start node-run",
+      "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/opt/config.json -s",
       "sudo apt-get clean"
     ]
   }
