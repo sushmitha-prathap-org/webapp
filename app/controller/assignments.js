@@ -1,5 +1,6 @@
 import * as services from "../service/services.js";
 import Assignment from "../models/assignment.js";
+import logger from "../logger.js";
 
 const setSuccessRes = (obj, response) => {
   response.status(200);
@@ -15,12 +16,13 @@ export const post = async (request, response) => {
   try {
     const payload = request.body;
     payload.userId = request.userId;
-    console.log("payload", payload);
     if (payload.points >= 1 && payload.points <= 100) {
       const item = await services.save(payload);
       // const assignment = await Assignment.create(payload);
       setSuccessRes(item, response);
+      logger.info("successfully posted assignment");
     } else {
+      logger.error("Bad Request - points not right");
       return response.status(404).end();
     }
   } catch (error) {
@@ -31,8 +33,8 @@ export const post = async (request, response) => {
 
 export const get = async (request, response) => {
   try {
-    console.log("in get");
     const itemList = await services.getAll();
+    logger.info("Returning list");
     setSuccessRes(itemList, response);
   } catch (error) {
     console.log("error", error);
@@ -44,6 +46,7 @@ export const getOne = async (request, response) => {
   try {
     const id = request.params.id;
     const item = await services.getOne(id);
+    logger.info(`Returning assignment with id ${id}`);
     setSuccessRes(item, response);
   } catch (error) {
     console.log("error", error);
@@ -58,6 +61,7 @@ export const update = async (request, response) => {
     // const updatedData.userId =
     const assignment = await Assignment.findOne({ where: { id } });
     if (assignment === null) {
+      logger.error(`Assignment Not Found with id ${id}`);
       return response.status(404).json({ error: "Assignment not found" });
     } else {
       console.log(assignment instanceof Assignment); // true
@@ -68,6 +72,7 @@ export const update = async (request, response) => {
 
       // Save the changes to the database
       await assignment.save();
+      logger.info("Assignment has been updated");
       setSuccessRes(assignment, response);
     }
   } catch (error) {
@@ -82,13 +87,14 @@ export const remove = async (request, response) => {
     // const item = await services.update(id);
     const assignment = await Assignment.findOne({ where: { id } });
     if (assignment === null) {
+      logger.error(`Assignment Not Found with id ${id}`);
       return response.status(404).json({ error: "Assignment not found" });
     } else {
       console.log(assignment instanceof Assignment); // true
 
       // Delete the user
       await assignment.destroy(); // No content response for successful deletion
-
+      logger.info("Assignment has been deleted");
       return response.status(204).end();
       //   setSuccessRes(item, response);
     }
