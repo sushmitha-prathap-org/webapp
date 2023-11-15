@@ -2,3 +2,7 @@
 
 
 This is demo text
+
+```bash
+remove ds store
+```
