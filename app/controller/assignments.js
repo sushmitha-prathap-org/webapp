@@ -19,7 +19,10 @@ export const post = async (request, response) => {
     if (payload.points >= 1 && payload.points <= 100) {
       const item = await services.save(payload);
       // const assignment = await Assignment.create(payload);
-      setSuccessRes(item, response);
+      // setSuccessRes(item, response);
+      response.status(201);
+      response.json(item);
+      assignments.increment("post-assignments.total");
       logger.info("successfully posted assignment");
     } else {
       logger.error("Bad Request - points not right");
