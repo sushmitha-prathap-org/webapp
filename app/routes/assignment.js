@@ -1,4 +1,4 @@
-import express from "express";
+import express, { response } from "express";
 import basicAuth from "basic-auth";
 import bcrypt from "bcrypt";
 import sequelize from "../database/database.js";
@@ -190,30 +190,6 @@ router.delete("/assignments/:id", (req, res, next) => {
   next();
 });
 
-// (req, res, next) => {
-//   // render a regular page
-//   res.render('regular')
-// })
-
-// router.route("/assignments").all(authenticate);
-
-// For GET requests to "/assignments"
-// router.get(checkGetAll, assignmentController.get);
-
-// // For POST requests to "/assignments"
-// router.post(checkPost, assignmentController.post);
-
-// router.route("/assignments/:id").all(checkAssignmentOwnership);
-
-// // For GET requests to "/assignments/:id"
-// router.get(checkGet, assignmentController.getOne);
-
-// // For PUT requests to "/assignments/:id"
-// router.put(checkPut, assignmentController.update);
-
-// // For DELETE requests to "/assignments/:id"
-// router.delete(checkDel, assignmentController.remove);
-
 router
   .route("/assignments")
   .all(authenticate)
@@ -226,5 +202,44 @@ router
   .get(assignmentController.getOne)
   .put(assignmentController.update)
   .delete(assignmentController.remove);
+
+const getUser = async (request, response, next) => {
+  const user = basicAuth(request);
+  console.log("user", user);
+  if (!user) {
+    logger.error("Unauthorized");
+    // response.set("WWW-Authenticate", 'Basic realm="Basic Authentication"');
+    return response.status(401).send("Unauthorized");
+  }
+  const result = await validateUser(user.name, user.pass);
+  console.log("result", result);
+
+  if (!result) {
+    logger.error("Unauthorized");
+    // response.set("WWW-Authenticate", 'Basic realm="Basic Authentication"');
+    return response.status(401).send("Unauthorized");
+  }
+  request.user = result;
+  next();
+};
+
+router.post("/assignments/:id/submission", (req, res, next) => {
+  if (req.method !== "POST") {
+    logger.error("Method Not Allowed - need post");
+    return res.status(405).send("Method Not Allowed");
+  }
+  if (Object.keys(req.query).length !== 0) {
+    logger.error("Bad Request - has query");
+    return res.status(400).send("Bad Request");
+  }
+  logger.info(`post submission count: ${postCount++}`);
+  assignments.increment("post-submission.total");
+  next();
+});
+
+router
+  .route("/assignments/:id/submission")
+  .all(getUser)
+  .post(assignmentController.postSub);
 
 export default router;
