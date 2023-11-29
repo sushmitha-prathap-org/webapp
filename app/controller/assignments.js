@@ -195,7 +195,7 @@ export const postSub = async (request, response) => {
     }
     const item = await services.saveSub(payload);
 
-    const msg = `${payload.submission_url},${request.user.email}`;
+    const msg = `${payload.submission_url},${request.user.email},${request.user.firstName}`;
     // console.log("in invoke", msg);
     invokeSNS(msg);
     response.status(201);
