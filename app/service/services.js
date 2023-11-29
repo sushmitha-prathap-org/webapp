@@ -1,4 +1,5 @@
 import Assignment from "../models/assignment.js";
+import Submission from "../models/submissions.js";
 
 export const save = async (newAssignment) => {
   const assignment = await Assignment.create(newAssignment);
@@ -19,6 +20,11 @@ export const getOne = async (id) => {
     console.log(assignment instanceof Assignment); // true
     return assignment;
   }
+};
+
+export const saveSub = async (newSub) => {
+  const sub = await Submission.create(newSub);
+  return sub;
 };
 
 // export const update = async (id) => {
