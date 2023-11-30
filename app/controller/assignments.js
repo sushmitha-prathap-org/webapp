@@ -182,7 +182,7 @@ export const postSub = async (request, response) => {
     });
     console.log("obj", obj.count, "assignment", assignment);
     if (obj.count + 1 > assignment.num_of_attemps) {
-      return response.status(400).json({ error: "Bad Request" });
+      return response.status(422).json({ error: "Exceeded num_of_attemps" });
     }
 
     const timestamp1 = new Date().toISOString();
@@ -191,7 +191,7 @@ export const postSub = async (request, response) => {
     console.log("2:", timestamp2, typeof timestamp2);
     if (timestamp1 > timestamp2) {
       console.log("Timestamp 1 is later than Timestamp 2");
-      return response.status(400).json({ error: "Bad Request" });
+      return response.status(403).json({ error: "Deadline Passed" });
     }
     const item = await services.saveSub(payload);
 
