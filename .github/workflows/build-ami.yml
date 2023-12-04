@@ -18,8 +18,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install zip
-        run: sudo apt-get -y install zip
+      - name: Install zip and jq
+        run: |
+          sudo apt-get -y install zip
+          sudo apt-get install jq
 
       - name: Create a zip archive
         run: |
@@ -99,16 +101,16 @@ jobs:
       - name: Refresh Instances in Auto Scaling Group
         id: refresh_instance
         run: |
-          refresh_instance_id=$(aws autoscaling start-instance-refresh --auto-scaling-group-name $asg_name --output json)
+          refresh_instance_id=$(aws autoscaling start-instance-refresh --auto-scaling-group-name $asg_name --output text)
           echo "refresh instance ID: $refresh_instance_id"
-          echo "refresh_id: $(echo $refresh_instance_id" | jq -r '.InstanceRefreshId')"
-          echo "refresh_id=$(echo $refresh_instance_id" | jq -r '.InstanceRefreshId')" >> $GITHUB_ENV
+          echo "refresh_id=$refresh_instance_id" >> $GITHUB_ENV
+
 
       - name: Wait for Instance Refresh Completion
         run: |
           status="pending"
           while [[ "$status" == "pending" || "$status" == "in-progress" ]]; do
-           sleep 60  # Wait for 60 seconds before checking the status again
+           sleep 60 
            status=$(aws autoscaling describe-instance-refreshes --auto-scaling-group-name $asg_name --instance-refresh-ids $refresh_id --output json | jq -r '.InstanceRefreshes[0].Status')
            echo "Current status: $status"
           done
