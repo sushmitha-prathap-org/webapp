@@ -14,7 +14,7 @@ variable "aws_region" {
 
 variable "source_ami" {
   type    = string
-  default = "ami-06db4d78cb1d3bbf9"
+  default = "ami-058bd2d568351da34"
 }
 
 variable "ssh_username" {
@@ -24,7 +24,7 @@ variable "ssh_username" {
 
 variable "subnet_id" {
   type    = string
-  default = "subnet-0eecd3b44f8a89f1f"
+  default = "subnet-02d2de33660afa5ed"
 }
 
 source "amazon-ebs" "my-ami" {
