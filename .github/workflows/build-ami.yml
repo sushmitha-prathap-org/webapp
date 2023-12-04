@@ -6,11 +6,12 @@ on:
 
 env:
   PRODUCT_VERSION: "1.9.4" # or: "latest"
-  stack: "demo"
 
 jobs:
   ami:
     runs-on: ubuntu-latest
+    env:
+       stack: "demo"
 
     steps:
       - name: Checkout code
