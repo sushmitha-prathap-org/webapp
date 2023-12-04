@@ -6,6 +6,7 @@ on:
 
 env:
   PRODUCT_VERSION: "1.9.4" # or: "latest"
+  stack: "demo"
 
 jobs:
   ami:
@@ -54,35 +55,34 @@ jobs:
           packer init ./app/packer/aws-us-east-1.pkr.hcl
 
       - name: Build AMI
-        id: packer
+        run: packer build ./app/packer/aws-us-east-1.pkr.hcl
+
+      - name: Get AMI id
         run: |
-          ami_id=$(packer build ./app/packer/aws-us-east-1.pkr.hcl | grep -oP '(?<=ami-)[a-f0-9]+')
+          ami_id=$(aws ec2 describe-images --owners 903587831963 --query 'Images | sort_by(@, &CreationDate) | [-1].ImageId' --output text)
           echo "Packer generated AMI ID: $ami_id"
-          echo "::set-output name=ami_id::$ami_id"
+          echo "AMI_ID=$ami_id" >> $GITHUB_ENV
 
       - name: Get Latest Launch Template ID
         id: latest-launch-template-id
         run: |
-          # Use AWS CLI to get the latest launch template ID
           latest_launch_template_id=$(aws ec2 describe-launch-templates \
             --query 'LaunchTemplates | sort_by(@, &CreateTime) | [-1].LaunchTemplateId' \
             --output text)
 
           echo "Latest Launch Template ID: $latest_launch_template_id"
-          echo "::set-output name=launch_template_id::$latest_launch_template_id"
+          echo "latest_launch_template_id=$latest_launch_template_id" >> $GITHUB_ENV
 
       - name: Create Launch Template Version
         id: launch_template_version
         run: |
-          launch_template_id="${{ steps.latest-launch-template-id.outputs.launch_template_id }}"
-          ami_id="${{ steps.packer.outputs.ami_id }}"
           launch_template_version_id=$(aws ec2 create-launch-template-version \
             --launch-template-id "$launch_template_id" \
             --version-description WebVersion2 \
             --source-version 1 \
-            --launch-template-data "ImageId=$ami_id")
+            --launch-template-data "ImageId=$AMI_ID")
             echo "Launch Template Version ID: $launch_template_version_id"
-            echo "::set-output name=launch_template_version_id::$launch_template_version_id"
+            echo "launch_template_version_id=$launch_template_version_id" >> $GITHUB_ENV
 
       - name: Update Auto Scaling Group
         run: |
@@ -96,7 +96,7 @@ jobs:
         run: |
           refresh_instance_id=$(aws autoscaling start-instance-refresh --auto-scaling-group-name "autoScaleGroup" --output json)
           echo "refresh instance ID: $refresh_instance_id"
-          echo "::set-output name=refresh_instance_id::$(echo $refresh_instance_id" | jq -r '.InstanceRefreshId')"
+          echo "refresh_instance_id=$(echo $refresh_instance_id" | jq -r '.InstanceRefreshId')" >> $GITHUB_ENV
 
       - name: Wait for Instance Refresh Completion
         run: |
