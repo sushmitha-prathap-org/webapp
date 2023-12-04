@@ -84,16 +84,22 @@ jobs:
             echo "Launch Template Version Name: $launch_template_version_name"
             echo "launch_template_version_name=$launch_template_version_name" >> $GITHUB_ENV
 
+      - name: Retrieve Auto Scaling Group Names
+        run: |
+          asg_name=$(aws autoscaling describe-auto-scaling-groups --query 'AutoScalingGroups[*].AutoScalingGroupName' --output text)
+          echo "Auto Scaling Group Names: $asg_name"
+          echo "asg_name=$asg_name" >> $GITHUB_ENV
+
       - name: Update Auto Scaling Group
         run: |
           aws autoscaling update-auto-scaling-group \
-          --auto-scaling-group-name autoScaleGroup \
+          --auto-scaling-group-name $asg_name \
           --launch-template "LaunchTemplateName=$launch_template_version_name,Version=latest"
 
       - name: Refresh Instances in Auto Scaling Group
         id: refresh_instance
         run: |
-          refresh_instance_id=$(aws autoscaling start-instance-refresh --auto-scaling-group-name "autoScaleGroup" --output json)
+          refresh_instance_id=$(aws autoscaling start-instance-refresh --auto-scaling-group-name $asg_name --output json)
           echo "refresh instance ID: $refresh_instance_id"
           echo "refresh_id: $(echo $refresh_instance_id" | jq -r '.InstanceRefreshId')"
           echo "refresh_id=$(echo $refresh_instance_id" | jq -r '.InstanceRefreshId')" >> $GITHUB_ENV
@@ -103,7 +109,7 @@ jobs:
           status="pending"
           while [[ "$status" == "pending" || "$status" == "in-progress" ]]; do
            sleep 60  # Wait for 60 seconds before checking the status again
-           status=$(aws autoscaling describe-instance-refreshes --auto-scaling-group-name "autoScaleGroup" --instance-refresh-ids $refresh_id --output json | jq -r '.InstanceRefreshes[0].Status')
+           status=$(aws autoscaling describe-instance-refreshes --auto-scaling-group-name $asg_name --instance-refresh-ids $refresh_id --output json | jq -r '.InstanceRefreshes[0].Status')
            echo "Current status: $status"
           done
 
