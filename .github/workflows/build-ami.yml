@@ -94,7 +94,7 @@ jobs:
         run: |
           aws autoscaling update-auto-scaling-group \
           --auto-scaling-group-name $asg_name \
-          --launch-template "{\"LaunchTemplateId\":\"$launch_template_version_name\",\"Version\":\"$Latest\"}"
+          --launch-template '{"LaunchTemplateId":"${{ env.launch_template_version_name }}","Version":"$Latest"}'
 
       - name: Refresh Instances in Auto Scaling Group
         id: refresh_instance
