@@ -76,8 +76,8 @@ jobs:
       - name: Create Launch Template Version
         id: launch_template_version
         run: |
-          launch_template_version_id=$(aws ec2 create-launch-template-version \
-            --launch-template-name "$latest_launch_template_id" \
+          launch_template_version_name=$(aws ec2 create-launch-template-version \
+            --launch-template-id "$latest_launch_template_id" \
             --version-description WebVersion2 \
             --source-version 1 \
             --launch-template-data "ImageId=$AMI_ID" --query 'LaunchTemplateVersion.LaunchTemplateName' --output text)
