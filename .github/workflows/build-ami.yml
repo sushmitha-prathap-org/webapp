@@ -77,18 +77,18 @@ jobs:
         id: launch_template_version
         run: |
           launch_template_version_id=$(aws ec2 create-launch-template-version \
-            --launch-template-id "$latest_launch_template_id" \
+            --launch-template-name "$latest_launch_template_id" \
             --version-description WebVersion2 \
             --source-version 1 \
-            --launch-template-data "ImageId=$AMI_ID")
-            echo "Launch Template Version ID: $launch_template_version_id"
-            echo "launch_template_version_id=$launch_template_version_id" >> $GITHUB_ENV
+            --launch-template-data "ImageId=$AMI_ID" --query 'LaunchTemplateVersion.VersionNumber' --output text)
+            echo "Launch Template Version Name: $launch_template_version_name"
+            echo "launch_template_version_name=$launch_template_version_name" >> $GITHUB_ENV
 
       - name: Update Auto Scaling Group
         run: |
           aws autoscaling update-auto-scaling-group \
           --auto-scaling-group-name autoScaleGroup \
-          --launch-template "LaunchTemplateId=$launch_template_version_id,Version=latest"
+          --launch-template "LaunchTemplateName=$launch_template_version_name,Version=latest"
 
       - name: Refresh Instances in Auto Scaling Group
         id: refresh_instance
