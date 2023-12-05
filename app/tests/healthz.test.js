@@ -35,7 +35,7 @@ beforeAll((done) => {
 
 describe("GET /healthz", () => {
   it("should return 200", async () => {
-    const res = await request(app).get("/healthCheck/healthz");
+    const res = await request(app).get("/healthChecks/healthz");
     expect(res.statusCode).toBe(200);
   });
 });
