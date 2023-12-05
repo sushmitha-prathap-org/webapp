@@ -6,5 +6,5 @@ export const healthCheck = (app) => {
 };
 
 export const assignment = (app) => {
-  app.use("/v2/", assignmentRouter);
+  app.use("/v3/", assignmentRouter);
 };
